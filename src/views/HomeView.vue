@@ -31,17 +31,17 @@ const fetchMembers = _.debounce(async () => {
     })
 }, 300)
 
-onBeforeMount(async () => {
-  await VK.init({
-    apiId: APP_ID
-  });
-  // await VK.Auth.login();
-  fetchMembers();
-})
-onMounted(() => {    
-  chart = echarts.init(chartElementRef.value);
-  // chart.setOption(chartOptions.value)
-})
+// onBeforeMount(async () => {
+//   await VK.init({
+//     apiId: APP_ID
+//   });
+//   // await VK.Auth.login();
+//   fetchMembers();
+// })
+// onMounted(() => {    
+//   chart = echarts.init(chartElementRef.value);
+//   // chart.setOption(chartOptions.value)
+// })
 
 watch(chartOptions, () => {
   chart.setOption(chartOptions.value)

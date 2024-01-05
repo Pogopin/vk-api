@@ -1,7 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
+
+html {
+  font-size: calc(11px + (16 - 11) * ((100vw - 1025px) / (1920 - 1025)));
+}
+
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
-img {
-  display: block;
+ul {
+  list-style: none;
+}
+* img {
+  max-width: 100%;
+  /* display: block; */
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  padding: 0 15px;  
 }
