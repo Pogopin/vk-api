@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onBeforeMount } from 'vue';
 import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
 import Checkbox from 'primevue/checkbox';
@@ -8,6 +8,10 @@ import Toast from 'primevue/toast';
 import { useVuelidate } from '@vuelidate/core';
 import { required, email, helpers } from '@vuelidate/validators';
 import { useToast } from 'primevue/usetoast';
+import { http } from '@/utils/apiService.js';
+import { useUsersStore } from '@/stores/usersStore.js';
+
+const usersStore = useUsersStore();
 
 const inputValue = ref({
   nameData: null,
@@ -15,15 +19,27 @@ const inputValue = ref({
   passwordData: null,
   agree: null
 })
+onBeforeMount(async () => {
+  usersStore.getUsers()      
+})
 const submitForm = async() => {  
 
-  const result = await v$.value.$validate();
+  const theResult = await v$.value.$validate();
+  const theCheck = await usersStore.checkUsers(inputValue.value.emailData)
+
   if(!inputValue.value.agree) {
     toast.add({ severity: 'error', summary: 'Подтвердите согласие', life: 3000 })
     return
-  }  
-  if(result) {
-    toast.add({ severity: 'success', summary: 'ок', life: 3000 })    
+  }
+  if(theResult) {    
+    if(!theCheck) {      
+      http.post('/register', {
+        fullName: inputValue.value.nameData,
+        email: inputValue.value.emailData,
+        password: inputValue.value.passwordData
+      })      
+      toast.add({ severity: 'success', summary: 'Регистрация прошла успешно!', life: 3000 })    
+    } else toast.add({ severity: 'error', summary: 'Такой пользователь уже зарегистрирован!', life: 3000 })    
   } else {
     toast.add({ severity: 'error', summary: 'Поля не заполнены', life: 3000 })
   }    

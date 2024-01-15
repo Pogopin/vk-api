@@ -11,7 +11,7 @@ import SignUpForm from '@/components/widgets/signUpForm/index.vue'
         <h4 class="signup__block-form-title">Sign Up</h4>
         <p class="signup__block-form-sub-title">Enter your email and password to register</p>
         <SignUpForm />        
-        <p class="signup__block-form-info">Already have an account? <span>Sign in</span></p>
+        <p class="signup__block-form-info">Already have an account? <router-link to="/"><span>Sign in</span></router-link></p>
       </div>
     </div>
     
