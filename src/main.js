@@ -1,8 +1,8 @@
-import './assets/main.css';
 import PrimeVue from 'primevue/config';
 import 'primevue/resources/themes/lara-light-pink/theme.css';
 import ToastService from 'primevue/toastservice';
-// import 'primevue/resources/primevue.min.css'
+import 'primevue/resources/primevue.min.css';
+import './assets/main.css';
 // import 'primeflex/primeflex.css'
 
 import { createApp } from 'vue';

@@ -18,7 +18,6 @@ const chartOptions = computed(() => {
   const { option } = setEchartProp(m,g);  
   return option
 })
-
 const fetchMembers = _.debounce(async () => {
   await VK.Api.call('groups.getMembers', {
     group_id: 'dendynn',
@@ -31,27 +30,26 @@ const fetchMembers = _.debounce(async () => {
     })
 }, 300)
 
-// onBeforeMount(async () => {
-//   await VK.init({
-//     apiId: APP_ID
-//   });
-//   // await VK.Auth.login();
-//   fetchMembers();
-// })
-// onMounted(() => {    
-//   chart = echarts.init(chartElementRef.value);
-//   // chart.setOption(chartOptions.value)
-// })
-
+onBeforeMount(async () => {
+  await VK.init({
+    apiId: APP_ID
+  });
+  // await VK.Auth.login();
+  fetchMembers();
+})
+onMounted(() => {    
+  chart = echarts.init(chartElementRef.value);
+  // chart.setOption(chartOptions.value)
+})
 watch(chartOptions, () => {
-  chart.setOption(chartOptions.value)
-  
+  chart.setOption(chartOptions.value)  
 })
 
 </script>
 
 <template>
   <div class="container">
+    <h1 class="title">Участники группы Dendy</h1>
     <div class="members">
       <div v-for="item in members" :key="item.id" :class="['members__item', {'members__item_girl' : item.sex == 1}]" >
         <img :src="item.photo_200_orig" alt="">
@@ -66,10 +64,17 @@ watch(chartOptions, () => {
   max-width: 1300px;
   margin: 0 auto;
 }
+.title {
+  text-align: center;
+  margin-top: auto;
+  margin-top: 10vh;
+  margin-bottom: 20px;
+}
 .members {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr) );
   gap: 5px;
+  
 }
 .members__item {
   border: 3px solid grey;

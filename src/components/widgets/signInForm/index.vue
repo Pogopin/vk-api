@@ -4,8 +4,13 @@
 	import InputText from 'primevue/inputtext';
 	import Checkbox from 'primevue/checkbox';
 	import Toast from 'primevue/toast';
+	import { useToast } from 'primevue/usetoast';
+	import { useRouter } from "vue-router";
 
 	import { http } from '@/utils/apiService.js';
+	import { saveTokenToCookies } from '@/utils/cookies.js';
+	const toast = useToast();
+	const router = useRouter();
 
 	const inputFormData = ref({
 		emailValue: null,
@@ -16,7 +21,17 @@
 			email: inputFormData.value.emailValue,
 			password: inputFormData.value.passwordValue
 		});
-		console.log(resp)
+		if(resp.data) {
+			// console.log(resp)
+			// saveTokenToCookies(resp.token);
+			toast.add({ severity: 'success', summary: 'Авторизация успешна!', life: 3000 });
+			
+			setTimeout(() => {
+				router.push('/main');
+			},2000)			
+		} else {
+			toast.add({ severity: 'error', summary: 'Такой пользователь не зарегистрирован!', life: 3000 });
+		}		
 	}
 
 </script>
@@ -51,7 +66,7 @@
 			<Toast/>
 			<Button class="btn" label="SIGN UP" severity="danger" @click="submitForm" />
   	</span>  
-		<p class="signIn__form-info">Don't have an account? <router-link to="/signup"><span>Sign up</span></router-link></p>
+		<p class="signIn__form-info">Don't have an account? <router-link :to="{name: 'signup'}"><span>Sign up</span></router-link></p>
 	</form> 
 </template>
 
