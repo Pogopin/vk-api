@@ -16,7 +16,7 @@
 		emailValue: null,
 		passwordValue: null
 	})
-	const submitForm = async () => {		
+	const submitForm = async () => {
 		const resp = await http.post('/auth', {
 			email: inputFormData.value.emailValue,
 			password: inputFormData.value.passwordValue
@@ -25,13 +25,13 @@
 			// console.log(resp)
 			// saveTokenToCookies(resp.token);
 			toast.add({ severity: 'success', summary: 'Авторизация успешна!', life: 3000 });
-			
+
 			setTimeout(() => {
 				router.push('/main');
-			},2000)			
+			},2000)
 		} else {
 			toast.add({ severity: 'error', summary: 'Такой пользователь не зарегистрирован!', life: 3000 });
-		}		
+		}
 	}
 
 </script>
@@ -42,44 +42,44 @@
 		<div class="signIn__form-header">
 			<h3 class="signIn__form-header-text">Sign In</h3>
 		</div>
-		<span class="p-float-label signIn__form-item">    
-			<InputText 
+		<span class="p-float-label signIn__form-item">
+			<InputText
 				class="form__input"
-				id="name" 
+				id="name"
 				v-model="inputFormData.emailValue"
-				type="text" 
+				type="text"
 			/>
-    	<label class="label" for="name">Email</label>        
+    	<label class="label" for="name">Email</label>
   	</span>
 
-		<span class="p-float-label signIn__form-item">    
-			<InputText 
+		<span class="p-float-label signIn__form-item">
+			<InputText
 				class="form__input"
-				id="name" 
+				id="name"
 				v-model="inputFormData.passwordValue"
-				type="text" 
+				type="text"
 			/>
-    	<label class="label" for="name">Password</label>        
+    	<label class="label" for="name">Password</label>
   	</span>
 
 		<span class="p-float-label signIn__form-item signIn__form-button">
 			<Toast/>
-			<Button class="btn" label="SIGN UP" severity="danger" @click="submitForm" />
-  	</span>  
+			<Button class="btn" label="SIGN IN" severity="danger" @click="submitForm" />
+  	</span>
 		<p class="signIn__form-info">Don't have an account? <router-link :to="{name: 'signup'}"><span>Sign up</span></router-link></p>
-	</form> 
+	</form>
 </template>
 
 <style scoped>
 .signIn__form {
-	max-width: 410px;	
+	max-width: 410px;
 	width: 410px;
 	height: 500px;
 	background-color: white;
 	padding: 20px;
 	padding-top: 8rem;
 	position: relative;
-	border-radius: 10px;	
+	border-radius: 10px;
 	display: flex;
   flex-direction: column;
   align-items: center;
