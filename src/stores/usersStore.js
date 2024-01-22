@@ -15,7 +15,7 @@ export const useUsersStore = defineStore(id, {
 		async getUsers() {
 			try {
 				const data = await http.get('/users');
-				this.usersList = (data);				
+				this.usersList = (data);
 			} catch (error) {
 				console.log(error);
 			}
@@ -23,8 +23,24 @@ export const useUsersStore = defineStore(id, {
 		async checkUsers(value) {
 			return this.usersList.some(el => {
 				return el.email === (value)
-			})  
-		}
+			})
+		},
+    async checkUserIsAuth(resource, tokenValue) {
+      try {
+        const responce = await fetch(`https://1ff6007222bdc06f.mokky.dev${resource}`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${tokenValue}`
+          }
+        })
+        const data = await responce.json();
+        if(data.statusCode) return data.statusCode;
+        else return data
+
+      } catch (error) {
+          console.log(error)
+      }
+    }
 	}
 })
 

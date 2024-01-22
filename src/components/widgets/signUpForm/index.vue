@@ -10,8 +10,10 @@ import { required, email, helpers } from '@vuelidate/validators';
 import { useToast } from 'primevue/usetoast';
 import { http } from '@/utils/apiService.js';
 import { useUsersStore } from '@/stores/usersStore.js';
+import { useRouter } from 'vue-router';
 
 const usersStore = useUsersStore();
+const router = useRouter();
 
 const inputValue = ref({
   nameData: null,
@@ -20,29 +22,32 @@ const inputValue = ref({
   agree: null
 })
 onBeforeMount(async () => {
-  usersStore.getUsers()      
+  usersStore.getUsers()
 })
-const submitForm = async() => {  
+const submitForm = async() => {
 
   const theResult = await v$.value.$validate();
-  const theCheck = await usersStore.checkUsers(inputValue.value.emailData)
+  const theCheck = await usersStore.checkUsers(inputValue.value.emailData);
 
   if(!inputValue.value.agree) {
-    toast.add({ severity: 'error', summary: 'Подтвердите согласие', life: 3000 })
+    toast.add({ severity: 'error', summary: 'Подтвердите согласие', life: 3000 });
     return
   }
-  if(theResult) {    
-    if(!theCheck) {      
+  if(theResult) {
+    if(!theCheck) {
       http.post('/register', {
         fullName: inputValue.value.nameData,
         email: inputValue.value.emailData,
         password: inputValue.value.passwordData
-      })      
-      toast.add({ severity: 'success', summary: 'Регистрация прошла успешно!', life: 3000 })    
-    } else toast.add({ severity: 'error', summary: 'Такой пользователь уже зарегистрирован!', life: 3000 })    
+      })
+      toast.add({ severity: 'success', summary: 'Регистрация прошла успешно!', life: 3000 });
+      setTimeout(() => {
+				router.push('/');
+			},2000)
+    } else toast.add({ severity: 'error', summary: 'Такой пользователь уже зарегистрирован!', life: 3000 });
   } else {
-    toast.add({ severity: 'error', summary: 'Поля не заполнены', life: 3000 })
-  }    
+    toast.add({ severity: 'error', summary: 'Поля не заполнены', life: 3000 });
+  }
 }
 const rules = computed(() => {
   return {
@@ -59,61 +64,61 @@ const toast = useToast();
 <template>
 <form class="form"
   @submit.prevent="submitForm"
->    
-  <span class="p-float-label form__item">    
-    <InputText 
+>
+  <span class="p-float-label form__item">
+    <InputText
       class="form__input"
-      id="name" 
-      v-model="inputValue.nameData"     
-      type="text" 
+      id="name"
+      v-model="inputValue.nameData"
+      type="text"
     />
-    <label class="label" for="name">Name</label>    
+    <label class="label" for="name">Name</label>
     <span class="form__item-errors"
       v-for="error in v$.nameData.$errors" :key="error.$uid"
     >
-      {{ error.$message }}  
+      {{ error.$message }}
     </span>
   </span>
-  
+
   <span class="p-float-label form__item">
-    <InputText 
+    <InputText
       class="form__input"
-      id="Email"    
-      v-model="inputValue.emailData"    
+      id="Email"
+      v-model="inputValue.emailData"
       type="Email"
     />
     <label for="Email">Email</label>
     <span class="form__item-errors"
       v-for="error in v$.emailData.$errors" :key="error.$uid"
     >
-      {{ error.$message }}  
+      {{ error.$message }}
     </span>
   </span>
 
   <span class="p-float-label form__item">
-    <InputText 
+    <InputText
       class="form__input"
       id="Password"
       v-model="inputValue.passwordData"
-      type="Password"      
-    />     
+      type="Password"
+    />
     <label for="Password">Password</label>
     <span class="form__item-errors"
       v-for="error in v$.passwordData.$errors" :key="error.$uid"
     >
-      {{ error.$message }}  
+      {{ error.$message }}
     </span>
   </span>
 
   <div class="flex align-items-center form__checkbox">
     <Checkbox v-model="inputValue.agree" inputId="agree" :binary="true"/>
-    <label for="agree" class="form__checkbox-label"> I agree the <span class="form__checkbox-text">Terms and Conditions</span></label>    
+    <label for="agree" class="form__checkbox-label"> I agree the <span class="form__checkbox-text">Terms and Conditions</span></label>
   </div>
-  
+
   <span class="p-float-label form__item form__button">
     <Toast/>
     <Button class="btn" label="SIGN UP" severity="danger" @click="submitForm" />
-  </span>  
+  </span>
 </form>
 
 </template>

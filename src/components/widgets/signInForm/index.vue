@@ -23,7 +23,7 @@
 		});
 		if(resp.data) {
 			// console.log(resp)
-			// saveTokenToCookies(resp.token);
+			saveTokenToCookies(resp.token);
 			toast.add({ severity: 'success', summary: 'Авторизация успешна!', life: 3000 });
 
 			setTimeout(() => {

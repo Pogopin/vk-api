@@ -2,7 +2,7 @@ class Http {
 	URL = 'https://1ff6007222bdc06f.mokky.dev'
 	constructor() { }
 
-	async post(resource, params) {		
+	async post(resource, params) {
 		try {
 			const response = await fetch(`${this.URL}${resource}`, {
 				method: "POST",
@@ -19,8 +19,8 @@ class Http {
 	}
 	async get(resource) {
 		try {
-			const res = await fetch(`${this.URL}${resource}`);	
-			return await res.json();		
+			const res = await fetch(`${this.URL}${resource}`);
+			return await res.json();
 		} catch (error) {
 				console.log(error);
 		}

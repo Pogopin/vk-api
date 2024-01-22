@@ -1,13 +1,19 @@
 <script setup>
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
+import VirtualScroller from 'primevue/virtualscroller';
+
 import { onBeforeMount, ref, watch, computed, onMounted } from 'vue';
 import _ from 'lodash';
 import * as echarts from 'echarts';
 import setEchartProp from '@/assets/js/chartOption.js';
 import { useRouter } from 'vue-router';
+import { deleteTokenInCookies, getTokenInCookies } from '@/utils/cookies.js';
+import { useUsersStore } from '@/stores/usersStore.js';
+
 
 const router = useRouter();
+const usersStore = useUsersStore();
 
 const APP_ID = '51809385';
 const version = '5.199';
@@ -30,7 +36,7 @@ const fetchMembers = _.debounce(async () => {
     v: version,
     language: 'ru',
     fields: 'photo_200_orig,sex,city',
-    count: 200
+    // count: 200
   }, r => {
       members.value = r.response.items;
       console.log(r.response.items.length)
@@ -44,9 +50,18 @@ onBeforeMount(async () => {
   // await VK.Auth.login();
   fetchMembers();
 })
-onMounted(() => {
+onMounted(async() => {
   chart = echarts.init(chartElementRef.value);
   // chart.setOption(chartOptions.value)
+  const vScroller = document.querySelector('.p-virtualscroller-content');
+  vScroller.style.display = 'flex';
+  vScroller.style.flexWrap = 'wrap';
+  vScroller.style.gap = '10px';
+
+  const token = getTokenInCookies();
+  const auth = await usersStore.checkUserIsAuth('/auth_me', token);
+  if(auth === 401) router.push('/');
+
 })
 watch(chartOptions, () => {
   chart.setOption(chartOptions.value)
@@ -55,6 +70,8 @@ watch(inputNameGroup, () => {
   fetchMembers();
 })
 const exit = () => {
+  deleteTokenInCookies();
+  console.log('куки очищены')
   router.push('/');
 }
 
@@ -67,28 +84,29 @@ const exit = () => {
   <div class="container">
     <form class="form"
 	  >
-      <!-- <h5 class="form__title">Введите название группы, участников которой хотите посмотреть!</h5> -->
-        <span class="p-float-label form__item">
-          <InputText
-            class="form__input"
-            id="name"
-            type="text"
-            v-model="inputNameGroup"
-          />
-          <label class="label" for="name">Введите название группы, участников которой хотите посмотреть</label>
-        </span>
+      <span class="p-float-label form__item">
+        <InputText
+          class="form__input"
+          id="name"
+          type="text"
+          v-model="inputNameGroup"
+        />
+        <label class="label" for="name">Введите название группы, участников которой хотите посмотреть</label>
+      </span>
     </form>
-    <!-- <h2 class="title">Участники группы  {{ inputNameGroup }} </h2> -->
-    <div class="members">
-      <div v-for="item in members" :key="item.id" :class="['members__item', {'members__item_girl' : item.sex == 1}]" >
-        <img :src="item.photo_200_orig" alt="">
-      </div>
-    </div>
+    <VirtualScroller :items="members" :itemSize="50" class="border-1 surface-border border-round mt-20" style="height: 80vh">
+      <template v-slot:item="{ item }">
+        <div :class="['members__item', {'members__item_girl' : item.sex == 1}]"><img class="members__img" :src="item.photo_200_orig" alt=""></div>
+      </template>
+    </VirtualScroller>
     <div class="grafic" ref="chartElementRef">
     </div>
   </div>
 </template>
 <style scoped>
+.mt-20 {
+  margin-top: 15vh;
+}
 .out-btn {
   width: 5%;
   position: fixed;
@@ -96,10 +114,13 @@ const exit = () => {
   left: 20px;
 }
 .btn {
-  width: 100%;
+  /* width: 100%; */
   padding: 15px;
 }
-
+.label {
+  font-size: 16px;
+  color: magenta
+}
 .container {
   max-width: 1300px;
   margin: 0 auto;
@@ -108,22 +129,13 @@ const exit = () => {
   margin: 20px 0 30px;
   text-align: center;
 }
-/* .form {
-  width: 600px;
-  margin: 0 auto;
-} */
 .form__item {
-  /* display: inline-flex;
-  width: 100%; */
-
   position: fixed;
   top: 4vh;
   left: 50%;
   transform: translateX(-50%);
   width: 40vw;
 }
-
-
 .form__input {
   padding: 10px;
   width: 100%;
@@ -146,13 +158,15 @@ const exit = () => {
 }
 .members__item {
   border: 3px solid grey;
+  width: 200px;
+  height: 200px;
 }
 .members__item_girl {
   border: 3px solid pink;
 }
-.members__item img{
+.members__img {
   width: 100%;
-  height: 200px;
+  height: 100%;
   object-fit: cover;
 }
 .grafic {
