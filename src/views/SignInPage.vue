@@ -4,9 +4,7 @@
 <template>
 	<div class="signIn">
 		<span class="mask bg-gradient-dark"></span>
-		<div class="signIn__form">
-			<SignInForm />			
-		</div>		
+			<SignInForm />
 	</div>
 </template>
 
@@ -18,8 +16,9 @@
 	background-position: center;
   background-size: cover;
 	display: flex;
-	justify-content: center;	
+	justify-content: center;
 	align-items: center;
+  padding: 0 20px;
 }
 .mask {
   position: absolute;

@@ -8,12 +8,11 @@ import _ from 'lodash';
 import * as echarts from 'echarts';
 import setEchartProp from '@/assets/js/chartOption.js';
 import { useRouter } from 'vue-router';
-import { deleteTokenInCookies, getTokenInCookies } from '@/utils/cookies.js';
+import { deleteTokenInCookies } from '@/utils/cookies.js';
 import { useUsersStore } from '@/stores/usersStore.js';
 
-
-const router = useRouter();
 const usersStore = useUsersStore();
+const router = useRouter();
 
 const APP_ID = '51809385';
 const version = '5.199';
@@ -57,11 +56,7 @@ onMounted(async() => {
   vScroller.style.display = 'flex';
   vScroller.style.flexWrap = 'wrap';
   vScroller.style.gap = '10px';
-
-  const token = getTokenInCookies();
-  const auth = await usersStore.checkUserIsAuth('/auth_me', token);
-  if(auth === 401) router.push('/');
-
+  vScroller.style.justifyContent = 'center';
 })
 watch(chartOptions, () => {
   chart.setOption(chartOptions.value)
@@ -72,9 +67,9 @@ watch(inputNameGroup, () => {
 const exit = () => {
   deleteTokenInCookies();
   console.log('куки очищены')
-  router.push('/');
+  // usersStore.setIsAuthStatus(false)
+  router.push('/signin');
 }
-
 </script>
 
 <template>
@@ -95,6 +90,7 @@ const exit = () => {
       </span>
     </form>
     <VirtualScroller :items="members" :itemSize="50" class="border-1 surface-border border-round mt-20" style="height: 80vh">
+      <input type="text">
       <template v-slot:item="{ item }">
         <div :class="['members__item', {'members__item_girl' : item.sex == 1}]"><img class="members__img" :src="item.photo_200_orig" alt=""></div>
       </template>
@@ -104,8 +100,26 @@ const exit = () => {
   </div>
 </template>
 <style scoped>
+@media screen and (max-width: 1340px) {
+  .form__item {
+    top: 100px !important;
+    left: calc(34vw + 22px) !important;
+    transform: translateX(0);
+  }
+}
+@media screen and (max-width: 1024px) {
+  .grafic {
+    display: none;
+  }
+}
+@media screen and (max-width: 1024px) {
+  .form__item {
+    left: 50% !important;
+
+  }
+}
 .mt-20 {
-  margin-top: 15vh;
+  margin-top: 160px;
 }
 .out-btn {
   width: 5%;
@@ -118,7 +132,7 @@ const exit = () => {
   padding: 15px;
 }
 .label {
-  font-size: 16px;
+  font-size: 1rem;
   color: magenta
 }
 .container {
@@ -131,10 +145,10 @@ const exit = () => {
 }
 .form__item {
   position: fixed;
-  top: 4vh;
+  top: 10vh;
   left: 50%;
   transform: translateX(-50%);
-  width: 40vw;
+  width: 50%;
 }
 .form__input {
   padding: 10px;

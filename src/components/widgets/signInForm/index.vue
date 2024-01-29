@@ -6,11 +6,12 @@
 	import Toast from 'primevue/toast';
 	import { useToast } from 'primevue/usetoast';
 	import { useRouter } from "vue-router";
-
+  import { useUsersStore } from '@/stores/usersStore.js';
 	import { http } from '@/utils/apiService.js';
 	import { saveTokenToCookies } from '@/utils/cookies.js';
 	const toast = useToast();
 	const router = useRouter();
+  const usersStore = useUsersStore();
 
 	const inputFormData = ref({
 		emailValue: null,
@@ -22,12 +23,12 @@
 			password: inputFormData.value.passwordValue
 		});
 		if(resp.data) {
-			// console.log(resp)
 			saveTokenToCookies(resp.token);
-			toast.add({ severity: 'success', summary: 'Авторизация успешна!', life: 3000 });
+      // usersStore.setIsAuthStatus(true);
 
+			toast.add({ severity: 'success', summary: 'Авторизация успешна!', life: 3000 });
 			setTimeout(() => {
-				router.push('/main');
+				router.push('/');
 			},2000)
 		} else {
 			toast.add({ severity: 'error', summary: 'Такой пользователь не зарегистрирован!', life: 3000 });
@@ -36,6 +37,7 @@
 
 </script>
 <template>
+  <div class="navigator"><p class="navigator__text">тестовые данные для входа: email: test@test.ru password: 12345</p></div>
 	<form class="signIn__form"
   	@submit.prevent="submitForm"
 	>
@@ -71,8 +73,18 @@
 </template>
 
 <style scoped>
+.navigator {
+  position: fixed;
+  top: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 0.75rem;
+  padding: 1.5rem 2rem;
+  color: #344676;
+  font-size: 1rem;
+  margin: 0.5rem 3rem;
+}
+
 .signIn__form {
-	max-width: 410px;
 	width: 410px;
 	height: 500px;
 	background-color: white;
@@ -84,6 +96,12 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  margin-top: 40px;
+}
+@media screen and (max-width: 1024px) {
+  .signIn__form {
+    width: 300px;
+  }
 }
 .signIn__form-header {
 	position: absolute;
@@ -96,6 +114,7 @@
 	padding-top: 2rem;
 }
 .signIn__form-header-text {
+  font-size: 1.5rem;
 	text-align: center;
 	font-weight: 700;
 	color: #FFF;

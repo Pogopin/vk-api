@@ -1,15 +1,17 @@
-import { defineStore } from 'pinia'
-import { http } from '@/utils/apiService.js'
+import { defineStore } from 'pinia';
+import { http } from '@/utils/apiService.js';
 
-const id = 'users-store'
+const id = 'users-store';
 export const useUsersStore = defineStore(id, {
 	state: () => {
 		return {
-			usersList: []
+			usersList: [],
+      isAuthStatus: false,
 		}
 	},
 	getters: {
-		getUsersData: (state) => state.usersList
+		getUsersData: (state) => state.usersList,
+    getIsAuthStatus: (state) => state.isAuthStatus
 	},
 	actions: {
 		async getUsers() {
@@ -25,7 +27,7 @@ export const useUsersStore = defineStore(id, {
 				return el.email === (value)
 			})
 		},
-    async checkUserIsAuth(resource, tokenValue) {
+    async checkUserIsAuth(resource, tokenValue) {// проверка, живет ли токен.
       try {
         const responce = await fetch(`https://1ff6007222bdc06f.mokky.dev${resource}`, {
           method: "GET",
@@ -34,12 +36,17 @@ export const useUsersStore = defineStore(id, {
           }
         })
         const data = await responce.json();
-        if(data.statusCode) return data.statusCode;
-        else return data
-
+        if(data.statusCode) {
+          this.isAuthStatus = false;
+          return
+        }
+        this.isAuthStatus = true;
       } catch (error) {
-          console.log(error)
+          console.log(error);
       }
+    },
+    async setIsAuthStatus(value) {
+      this.isAuthStatus = value;
     }
 	}
 })
