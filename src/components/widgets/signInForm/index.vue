@@ -111,10 +111,10 @@
 	background-color: #EC407A;
 	border-radius: 10px;
 	box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(233, 30, 99, 0.4);
-	padding-top: 2rem;
+	padding-top: 50px;
 }
 .signIn__form-header-text {
-  font-size: 1.5rem;
+  font-size: 30px;
 	text-align: center;
 	font-weight: 700;
 	color: #FFF;

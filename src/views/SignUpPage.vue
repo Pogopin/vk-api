@@ -39,11 +39,12 @@ import SignUpForm from '@/components/widgets/signUpForm/index.vue'
 
 .signup__block-form-title {
   font-weight: 700;
-  font-size: 1.5rem;
+  font-size: 30px;
   line-height: 1.375;
   margin-bottom: 10px;
 }
 .signup__block-form-sub-title {
+  font-size: 19px; 	
   margin-bottom: 50px;
   line-height: 1.625;
   font-weight: 300;
